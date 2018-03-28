@@ -1,5 +1,5 @@
 group 'com.github.Adamaq01'
-version '0.1'
+version '1.0'
 
 apply plugin: 'java'
 apply plugin: 'maven'
@@ -7,6 +7,7 @@ apply plugin: 'maven'
 sourceCompatibility = 1.8
 
 project.ext.jomlVersion = "1.9.9"
+project.ext.asmVersion = "6.1.1"
 
 repositories {
     mavenCentral()
@@ -17,4 +18,7 @@ repositories {
 
 dependencies {
     compile "org.joml:joml:${jomlVersion}"
+    compile "org.ow2.asm:asm:${asmVersion}"
+    compile "org.ow2.asm:asm-tree:${asmVersion}"
+    compile "org.ow2.asm:asm-util:${asmVersion}"
 }

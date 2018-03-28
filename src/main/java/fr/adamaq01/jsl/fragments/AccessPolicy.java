@@ -1,6 +1,6 @@
 package fr.adamaq01.jsl.fragments;
 
-import jdk.internal.org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Opcodes;
 
 public class AccessPolicy implements Opcodes {
 

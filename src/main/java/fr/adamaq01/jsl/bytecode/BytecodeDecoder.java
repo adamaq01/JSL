@@ -4,10 +4,10 @@ import fr.adamaq01.jsl.CodeDecoder;
 import fr.adamaq01.jsl.JSLException;
 import fr.adamaq01.jsl.fragments.*;
 import fr.adamaq01.jsl.fragments.MethodCallFragment.InvokeTypes;
-import jdk.internal.org.objectweb.asm.ClassReader;
-import jdk.internal.org.objectweb.asm.Label;
-import jdk.internal.org.objectweb.asm.tree.*;
-import jdk.internal.org.objectweb.asm.util.Printer;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.tree.*;
+import org.objectweb.asm.util.Printer;
 
 import java.io.IOException;
 import java.util.*;
