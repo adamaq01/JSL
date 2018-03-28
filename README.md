@@ -2,7 +2,18 @@
 
 ##### JSL (Java Shading Language) is a Java Library which consist in writing shaders in Java and converting it in some others shading languages like GLSL (OpenGL Shading Language)
 
-[![Release](https://jitpack.io/v/User/Repo.svg)]
-(https://jitpack.io/#User/Repo)
+
+#### Add the dependency to your project
+![Release](https://jitpack.io/v/Adamaq01/JSL.svg)
+
+```Gradle
+   repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+   }
+   dependencies {
+         compile 'com.github.jitpack:gradle-simple:1.0'
+   }
+```
 
 ###### Based on jglrxavpok's [JLSL Project](https://github.com/jglrxavpok/JLSL): 
