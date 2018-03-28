@@ -8,11 +8,10 @@
 
 ```Gradle
    repositories {
-        jcenter()
         maven { url "https://jitpack.io" }
    }
    dependencies {
-         compile 'com.github.jitpack:gradle-simple:1.0'
+         compile 'com.github.Adamaq01:JSL:1.0'
    }
 ```
 
