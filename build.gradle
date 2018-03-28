@@ -1,7 +1,8 @@
-group 'fr.adamaq01'
+group 'com.github.Adamaq01'
 version '0.1'
 
 apply plugin: 'java'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 
