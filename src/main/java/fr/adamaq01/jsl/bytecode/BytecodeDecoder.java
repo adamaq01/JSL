@@ -12,7 +12,7 @@ import org.objectweb.asm.util.Printer;
 import java.io.IOException;
 import java.util.*;
 
-import static jdk.internal.org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.*;
 
 public class BytecodeDecoder extends CodeDecoder {
 
