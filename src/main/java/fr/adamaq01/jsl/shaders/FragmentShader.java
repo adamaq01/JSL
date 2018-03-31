@@ -37,7 +37,7 @@ public abstract class FragmentShader extends Shader {
 
     // Other
 
-    FragmentShader(int version) {
+    public FragmentShader(int version) {
         super(ShaderType.FRAGMENT, version);
     }
 }
