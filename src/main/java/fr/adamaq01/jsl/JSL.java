@@ -75,6 +75,77 @@ public class JSL {
         int ownerPosition() default 0;
 
         boolean actsAsField() default false;
+    }
 
+    public static class MethodSubstitute {
+
+        /*
+         * No default value
+         */
+        private String value;
+        /*
+         * Default value: true
+         */
+        private boolean usesParenthesis;
+        /*
+         * Default value: false
+         */
+        private boolean ownerBefore;
+        /*
+         * Default value: 0
+         */
+        private int ownerPosition;
+        /*
+         * Default value: false
+         */
+        private boolean actsAsField;
+
+        public MethodSubstitute(String value) {
+            this.value = value;
+            this.usesParenthesis = true;
+            this.ownerBefore = false;
+            this.ownerPosition = 0;
+            this.actsAsField = false;
+        }
+
+        public MethodSubstitute usesParenthesis(boolean value) {
+            this.usesParenthesis = value;
+            return this;
+        }
+
+        public MethodSubstitute ownerBefore(boolean value) {
+            this.ownerBefore = value;
+            return this;
+        }
+
+        public MethodSubstitute ownerPosition(int value) {
+            this.ownerPosition = value;
+            return this;
+        }
+
+        public MethodSubstitute actsAsField(boolean value) {
+            this.actsAsField = value;
+            return this;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public boolean usesParenthesis() {
+            return usesParenthesis;
+        }
+
+        public boolean ownerBefore() {
+            return ownerBefore;
+        }
+
+        public int getOwnerPosition() {
+            return ownerPosition;
+        }
+
+        public boolean actsAsField() {
+            return actsAsField;
+        }
     }
 }

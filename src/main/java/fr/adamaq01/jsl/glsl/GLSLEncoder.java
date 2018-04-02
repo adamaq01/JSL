@@ -2,10 +2,7 @@ package fr.adamaq01.jsl.glsl;
 
 import java.util.*;
 
-import fr.adamaq01.jsl.CodeDecoder;
-import fr.adamaq01.jsl.CodeEncoder;
-import fr.adamaq01.jsl.JSL;
-import fr.adamaq01.jsl.JSLException;
+import fr.adamaq01.jsl.*;
 import fr.adamaq01.jsl.fragments.*;
 import fr.adamaq01.jsl.glsl.fragments.StructFragment;
 import fr.adamaq01.jsl.fragments.MethodCallFragment.InvokeTypes;
@@ -59,19 +56,39 @@ public class GLSLEncoder extends CodeEncoder {
         setGLSLTranslation("double", "float"); // not every GPU has double
         // precision;
         setGLSLTranslation(Vector2f.class.getCanonicalName(), "vec2");
+        setGLSLTranslation(Vector2d.class.getCanonicalName(), "vec2");
+        setGLSLTranslation(Vector2i.class.getCanonicalName(), "vec2");
         setGLSLTranslation(Vector3f.class.getCanonicalName(), "vec3");
+        setGLSLTranslation(Vector3d.class.getCanonicalName(), "vec3");
+        setGLSLTranslation(Vector3i.class.getCanonicalName(), "vec3");
         setGLSLTranslation(Vector4f.class.getCanonicalName(), "vec4");
+        setGLSLTranslation(Vector4d.class.getCanonicalName(), "vec4");
+        setGLSLTranslation(Vector4i.class.getCanonicalName(), "vec4");
         setGLSLTranslation(Matrix3f.class.getCanonicalName(), "mat3");
         setGLSLTranslation(Matrix4f.class.getCanonicalName(), "mat4");
         setGLSLTranslation(Integer.class.getCanonicalName(), "int");
 
         setGLSLTranslation(Math.class.getCanonicalName(), "");
 
-        // setGLSLTranslation(Sampler2D.class.getCanonicalName(), "sampler2D");
+        setGLSLTranslation(Sampler2D.class.getCanonicalName(), "sampler2D");
+
+        JOMLMappings jomlMappings = new JOMLMappings();
+        methodMappings.put(Vector2f.class, jomlMappings);
+        methodMappings.put(Vector2d.class, jomlMappings);
+        methodMappings.put(Vector2i.class, jomlMappings);
+        methodMappings.put(Vector3f.class, jomlMappings);
+        methodMappings.put(Vector3d.class, jomlMappings);
+        methodMappings.put(Vector3i.class, jomlMappings);
+        methodMappings.put(Vector4f.class, jomlMappings);
+        methodMappings.put(Vector4d.class, jomlMappings);
+        methodMappings.put(Vector4i.class, jomlMappings);
+        methodMappings.put(Matrix3f.class, jomlMappings);
+        methodMappings.put(Matrix4f.class, jomlMappings);
     }
 
     private HashMap<String, String> translations = new HashMap<>();
     private HashMap<String, String> conversionsToStructs = new HashMap<>();
+    private HashMap<Class<?>, Mappings> methodMappings = new HashMap<>();
 
     public void addToStructConversion(String javaType, String structName) {
         conversionsToStructs.put(javaType, structName);
@@ -212,7 +229,11 @@ public class GLSLEncoder extends CodeEncoder {
         } else if (fragment.getClass() == ElseStatementFragment.class) {
             handleElseStatementFragment((ElseStatementFragment) fragment, in, index, out);
         } else if (fragment.getClass() == MethodCallFragment.class) {
-            handleMethodCallFragment((MethodCallFragment) fragment, in, index, out);
+            try {
+                handleMethodCallFragment((MethodCallFragment) fragment, in, index, out);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         } else if (fragment.getClass() == ModFragment.class) {
             handleModFragment((ModFragment) fragment, in, index, out);
         } else if (fragment.getClass() == CastFragment.class) {
@@ -518,7 +539,7 @@ public class GLSLEncoder extends CodeEncoder {
         stack.push("mod(" + b + ", " + a + ")");
     }
 
-    private void handleMethodCallFragment(MethodCallFragment fragment, List<CodeFragment> in, int index, StringBuilder out) {
+    private void handleMethodCallFragment(MethodCallFragment fragment, List<CodeFragment> in, int index, StringBuilder out) throws ClassNotFoundException {
         String s = "";
         String n = fragment.methodName;
         boolean isConstructor = false;
@@ -555,6 +576,7 @@ public class GLSLEncoder extends CodeEncoder {
         }
         s += argsStr;
         s += ")";
+
         boolean ownerBefore = false;
         boolean parenthesis = true;
         int ownerPosition = 0;
@@ -563,7 +585,8 @@ public class GLSLEncoder extends CodeEncoder {
             if (child.getClass() == AnnotationFragment.class) {
                 AnnotationFragment annot = (AnnotationFragment) child;
                 if (annot.name.equals(JSL.Substitute.class.getCanonicalName())) {
-                    if (!annot.values.get("value").equals("$")) n = (String) annot.values.get("value");
+                    if (!annot.values.get("value").equals("$"))
+                        n = (String) annot.values.get("value");
                     if (annot.values.containsKey("ownerBefore"))
                         ownerBefore = (Boolean) annot.values.get("ownerBefore");
                     if (annot.values.containsKey("ownerPosition"))
@@ -575,6 +598,19 @@ public class GLSLEncoder extends CodeEncoder {
                 }
             }
         }
+
+        if (methodMappings.containsKey(Class.forName(fragment.methodOwner))) {
+            Mappings mappings = methodMappings.get(Class.forName(fragment.methodOwner));
+            if (mappings.getMappings().containsKey(fragment.methodName)) {
+                JSL.MethodSubstitute methodSubstitute = mappings.getMappings().get(fragment.methodName);
+                n = methodSubstitute.getValue();
+                ownerBefore = methodSubstitute.ownerBefore();
+                ownerPosition = methodSubstitute.getOwnerPosition();
+                actsAsField = methodSubstitute.actsAsField();
+                parenthesis = methodSubstitute.usesParenthesis();
+            }
+        }
+
         if (fragment.invokeType == InvokeTypes.VIRTUAL) {
             String owner = stack.pop();
             if (owner.equals(currentClass.className) || owner.equals("this")) {
@@ -851,9 +887,7 @@ public class GLSLEncoder extends CodeEncoder {
                     storageType = "varying";
                 } else if (annot.name.equals(JSL.Layout.class.getCanonicalName())) {
                     int location = (Integer) annot.values.get("location");
-
-                    if (glslversion > 430 || extensions.contains("GL_ARB_explicit_uniform_location"))
-                        out.append("layout(location = " + location + ") ");
+                    out.append("layout(location = " + location + ") ");
                 }
             }
         }
