@@ -11,7 +11,7 @@
         maven { url "https://jitpack.io" }
    }
    dependencies {
-         compile 'com.github.Adamaq01:JSL:1.0.1'
+         compile 'com.github.Adamaq01:JSL:1.0.2'
    }
 ```
 
