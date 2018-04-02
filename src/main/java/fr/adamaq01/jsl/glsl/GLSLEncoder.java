@@ -887,7 +887,13 @@ public class GLSLEncoder extends CodeEncoder {
                     storageType = "varying";
                 } else if (annot.name.equals(JSL.Layout.class.getCanonicalName())) {
                     int location = (Integer) annot.values.get("location");
-                    out.append("layout(location = " + location + ") ");
+                    int layoutIndex = (Integer) annot.values.get("index");
+                    
+                    out.append("layout(location = " + location);
+                    if (layoutIndex != -1) {
+                        out.append(", index = " + layoutIndex);
+                    }
+                    out.append(") ");
                 }
             }
         }

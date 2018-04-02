@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import fr.adamaq01.jsl.JSL.In;
+import fr.adamaq01.jsl.JSL.Layout;
 import fr.adamaq01.jsl.JSL.Uniform;
 import fr.adamaq01.jsl.shaders.FragmentShader;
 
@@ -12,6 +13,7 @@ import fr.adamaq01.jsl.shaders.FragmentShader;
 public class JslTestShader extends FragmentShader {
     
     @In
+    @Layout(location = 1, index = 2)
     protected Vector3f attributePosition;
 
     @Uniform
@@ -23,6 +25,9 @@ public class JslTestShader extends FragmentShader {
     @Uniform
     protected Matrix4f projection;
     
+    @Uniform
+    protected double time;
+    
     public JslTestShader() {
         super(330);
     }
@@ -30,6 +35,6 @@ public class JslTestShader extends FragmentShader {
     @Override
     public void main() {
         
-        model.transform(view.transform(projection.transform(new Vector4f(attributePosition, 1.0f), gl_FragCoord)));
+        gl_FragCoord = model.transform(view.transform(projection.transform(new Vector4f(attributePosition, 1.0f))));
     }
 }

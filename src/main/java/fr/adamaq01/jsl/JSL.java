@@ -39,8 +39,8 @@ public class JSL {
 
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Layout {
-
         int location();
+        int index() default -1;
     }
 
     @Retention(RetentionPolicy.RUNTIME)
