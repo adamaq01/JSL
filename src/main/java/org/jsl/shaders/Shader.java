@@ -1,6 +1,8 @@
 package org.jsl.shaders;
 
+import org.jsl.JSL;
 import org.jsl.ShaderType;
+import org.jsl.ShadingLanguage;
 
 /**
  * Created by Adamaq01 on 27/03/2018.
@@ -27,5 +29,9 @@ public abstract class Shader {
 
     public int getVersion() {
         return version;
+    }
+    
+    public String convert(ShadingLanguage shadingLanguage) {
+        return JSL.convert(this, shadingLanguage);
     }
 }
