@@ -1,4 +1,4 @@
-package fr.adamaq01.jsl.tests;
+package org.jsl.tests;
 
 import static org.joml.Math.sin;
 
