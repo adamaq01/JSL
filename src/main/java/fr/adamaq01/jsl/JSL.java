@@ -11,6 +11,13 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class JSL {
 
+    /**
+     * Converts the given {@link Shader} to the given {@link ShadingLanguage}.
+     * 
+     * @param shader the shader to be converted
+     * @param shadingLanguage the language to translate to
+     * @return The translated shader.
+     */
     public static String convert(Shader shader, ShadingLanguage shadingLanguage) {
         CodeDecoder decoder = new BytecodeDecoder();
         CodeEncoder encoder;

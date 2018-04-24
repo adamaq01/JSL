@@ -34,7 +34,7 @@ public abstract class FragmentShader extends Shader {
     @Out
     @Base
     protected float gl_FragDepth;
-
+    
     // Other
 
     public FragmentShader(int version) {

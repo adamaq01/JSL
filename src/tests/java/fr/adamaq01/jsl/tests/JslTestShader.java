@@ -1,5 +1,7 @@
 package fr.adamaq01.jsl.tests;
 
+import static org.joml.Math.sin;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -34,7 +36,11 @@ public class JslTestShader extends FragmentShader {
 
     @Override
     public void main() {
-        
-        gl_FragCoord = model.transform(view.transform(projection.transform(new Vector4f(attributePosition, 1.0f))));
+        gl_FragCoord = foo(attributePosition);
+        gl_FragCoord.x = (float) sin(time);
+    }
+    
+    public Vector4f foo(Vector3f coords) {
+        return model.transform(view.transform(projection.transform(new Vector4f(coords, 1.0f))));
     }
 }
